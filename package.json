@@ -1,0 +1,35 @@
+{
+  "name": "karakeep-reader",
+  "author": "Carlos Cámara",
+  "version": "0.1.0",
+  "keywords": ["pebble-app"],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@rebble/clay": "^1.1.0"
+  },
+  "pebble": {
+    "displayName": "Karakeep Reader",
+    "uuid": "aa203c69-4387-4ad9-9b70-259c83644865",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": ["emery", "gabbro", "flint", "diorite"],
+    "watchapp": { "watchface": false },
+    "messageKeys": [
+      "REQ_LIST",
+      "REQ_ARTICLE",
+      "ITEM_COUNT",
+      "ITEM_INDEX",
+      "ITEM_TITLE",
+      "ART_INDEX",
+      "ART_TOTAL",
+      "ART_TEXT",
+      "ERROR",
+      "SERVER_URL",
+      "API_KEY",
+      "LIST_FILTER",
+      "MAX_ITEMS"
+    ],
+    "resources": { "media": [] }
+  }
+}

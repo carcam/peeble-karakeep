@@ -1,0 +1,50 @@
+[
+  { "type": "heading", "defaultValue": "Karakeep Reader" },
+  {
+    "type": "section",
+    "items": [
+      { "type": "heading", "defaultValue": "Conexión" },
+      {
+        "type": "input",
+        "messageKey": "SERVER_URL",
+        "label": "URL de tu Karakeep",
+        "description": "Por ejemplo https://karakeep.example.com (sin /api).",
+        "attributes": { "placeholder": "https://karakeep.example.com", "type": "url" }
+      },
+      {
+        "type": "input",
+        "messageKey": "API_KEY",
+        "label": "API key",
+        "description": "Créala en Karakeep: Ajustes > API Keys.",
+        "attributes": { "type": "password" }
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "items": [
+      { "type": "heading", "defaultValue": "Lista" },
+      {
+        "type": "select",
+        "messageKey": "LIST_FILTER",
+        "label": "Qué mostrar",
+        "defaultValue": "unarchived",
+        "options": [
+          { "label": "Sin archivar", "value": "unarchived" },
+          { "label": "Favoritos", "value": "favourites" },
+          { "label": "Todos", "value": "all" }
+        ]
+      },
+      {
+        "type": "slider",
+        "messageKey": "MAX_ITEMS",
+        "label": "Número de artículos",
+        "defaultValue": 20,
+        "min": 5,
+        "max": 30,
+        "step": 5
+      }
+    ]
+  },
+  { "type": "submit", "defaultValue": "Guardar" }
+]
