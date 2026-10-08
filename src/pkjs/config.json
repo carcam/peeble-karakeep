@@ -1,38 +1,61 @@
 [
-  { "type": "heading", "defaultValue": "Karakeep Reader" },
+  {
+    "type": "heading",
+    "defaultValue": "Karakeep Reader"
+  },
   {
     "type": "section",
     "items": [
-      { "type": "heading", "defaultValue": "Conexión" },
+      {
+        "type": "heading",
+        "defaultValue": "Conexión"
+      },
       {
         "type": "input",
         "messageKey": "SERVER_URL",
         "label": "URL de tu Karakeep",
         "description": "Por ejemplo https://karakeep.example.com (sin /api).",
-        "attributes": { "placeholder": "https://karakeep.example.com", "type": "url" }
+        "attributes": {
+          "placeholder": "https://karakeep.example.com",
+          "type": "url"
+        }
       },
       {
         "type": "input",
         "messageKey": "API_KEY",
         "label": "API key",
         "description": "Créala en Karakeep: Ajustes > API Keys.",
-        "attributes": { "type": "password" }
+        "attributes": {
+          "type": "password"
+        }
       }
     ]
   },
   {
     "type": "section",
     "items": [
-      { "type": "heading", "defaultValue": "Lista" },
+      {
+        "type": "heading",
+        "defaultValue": "Lista"
+      },
       {
         "type": "select",
         "messageKey": "LIST_FILTER",
         "label": "Qué mostrar",
         "defaultValue": "unarchived",
         "options": [
-          { "label": "Sin archivar", "value": "unarchived" },
-          { "label": "Favoritos", "value": "favourites" },
-          { "label": "Todos", "value": "all" }
+          {
+            "label": "Sin archivar",
+            "value": "unarchived"
+          },
+          {
+            "label": "Favoritos",
+            "value": "favourites"
+          },
+          {
+            "label": "Todos",
+            "value": "all"
+          }
         ]
       },
       {
@@ -46,5 +69,99 @@
       }
     ]
   },
-  { "type": "submit", "defaultValue": "Guardar" }
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Letra"
+      },
+      {
+        "type": "select",
+        "messageKey": "LIST_FONT",
+        "label": "Tamaño en la lista",
+        "defaultValue": 0,
+        "options": [
+          {
+            "label": "Automático (como el reloj)",
+            "value": 0
+          },
+          {
+            "label": "Pequeño",
+            "value": 1
+          },
+          {
+            "label": "Medio",
+            "value": 2
+          },
+          {
+            "label": "Grande",
+            "value": 3
+          },
+          {
+            "label": "Muy grande",
+            "value": 4
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "ARTICLE_FONT",
+        "label": "Tamaño en el artículo",
+        "defaultValue": 0,
+        "options": [
+          {
+            "label": "Automático (como el reloj)",
+            "value": 0
+          },
+          {
+            "label": "Pequeño",
+            "value": 1
+          },
+          {
+            "label": "Medio",
+            "value": 2
+          },
+          {
+            "label": "Grande",
+            "value": 3
+          },
+          {
+            "label": "Muy grande",
+            "value": 4
+          }
+        ],
+        "description": "Automático usa el tamaño de texto configurado en los ajustes del reloj."
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Aspecto"
+      },
+      {
+        "type": "select",
+        "messageKey": "THEME",
+        "label": "Tema",
+        "defaultValue": 0,
+        "options": [
+          {
+            "label": "Claro",
+            "value": 0
+          },
+          {
+            "label": "Oscuro",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "submit",
+    "defaultValue": "Guardar"
+  }
 ]

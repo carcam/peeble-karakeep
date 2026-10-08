@@ -16,6 +16,39 @@ static TextLayer *s_text;
 static char s_article[ARTICLE_MAX];
 static bool s_reader_open = false;
 
+#define PERSIST_LIST_FONT 1
+#define PERSIST_ARTICLE_FONT 2
+#define PERSIST_THEME 3
+static int s_theme = 0;         /* 0 = claro, 1 = oscuro */
+
+static GColor bg_color(void) { return s_theme ? GColorBlack : GColorWhite; }
+static GColor fg_color(void) { return s_theme ? GColorWhite : GColorBlack; }
+static int s_list_pref = 0;     /* 0 = automático, 1..4 = tamaño elegido */
+static int s_article_pref = 0;
+
+/* Nivel efectivo 1..4; en automático sigue el tamaño de texto del reloj. */
+static int font_level(int pref) {
+  if (pref >= 1 && pref <= 4) { return pref; }
+  switch (preferred_content_size()) {
+    case PreferredContentSizeSmall: return 1;
+    case PreferredContentSizeLarge: return 3;
+    case PreferredContentSizeExtraLarge: return 4;
+    default: return 2;
+  }
+}
+
+static GFont list_font(void) {
+  static const char *keys[] = { FONT_KEY_GOTHIC_18_BOLD, FONT_KEY_GOTHIC_24_BOLD,
+                                FONT_KEY_GOTHIC_28_BOLD, FONT_KEY_GOTHIC_28_BOLD };
+  return fonts_get_system_font(keys[font_level(s_list_pref) - 1]);
+}
+
+static GFont article_font(void) {
+  static const char *keys[] = { FONT_KEY_GOTHIC_18, FONT_KEY_GOTHIC_24,
+                                FONT_KEY_GOTHIC_28, FONT_KEY_GOTHIC_28_BOLD };
+  return fonts_get_system_font(keys[font_level(s_article_pref) - 1]);
+}
+
 static void send_request(uint32_t key, int32_t value) {
   DictionaryIterator *out;
   if (app_message_outbox_begin(&out) == APP_MSG_OK) {
@@ -40,11 +73,14 @@ static void reader_relayout(void) {
 static void reader_load(Window *window) {
   Layer *root = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(root);
+  window_set_background_color(window, bg_color());
   s_scroll = scroll_layer_create(bounds);
   scroll_layer_set_click_config_onto_window(s_scroll, window);
   s_text = text_layer_create(GRect(PBL_IF_ROUND_ELSE(12, 4), 0,
                                    bounds.size.w - PBL_IF_ROUND_ELSE(24, 8), 2000));
-  text_layer_set_font(s_text, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  text_layer_set_font(s_text, article_font());
+  text_layer_set_background_color(s_text, bg_color());
+  text_layer_set_text_color(s_text, fg_color());
   scroll_layer_add_child(s_scroll, text_layer_get_layer(s_text));
   layer_add_child(root, scroll_layer_get_layer(s_scroll));
   strcpy(s_article, "Cargando...");
@@ -76,14 +112,20 @@ static uint16_t menu_rows(MenuLayer *m, uint16_t section, void *ctx) {
 }
 
 static int16_t menu_cell_height(MenuLayer *m, MenuIndex *idx, void *ctx) {
-  return PBL_IF_ROUND_ELSE(menu_layer_is_index_selected(m, idx) ? 80 : 50, 52);
+  static const int16_t heights[] = { 52, 68, 80, 80 };
+  int16_t h = heights[font_level(s_list_pref) - 1];
+  return PBL_IF_ROUND_ELSE(menu_layer_is_index_selected(m, idx) ? h + 28 : h, h);
 }
 
 static void menu_draw_row(GContext *ctx, const Layer *cell, MenuIndex *idx, void *data) {
   GRect b = layer_get_bounds(cell);
-  graphics_context_set_text_color(ctx, menu_cell_layer_is_highlighted(cell) ? GColorWhite : GColorBlack);
+  if (!menu_cell_layer_is_highlighted(cell)) {
+    graphics_context_set_fill_color(ctx, bg_color());
+    graphics_fill_rect(ctx, b, 0, GCornerNone);
+  }
+  graphics_context_set_text_color(ctx, menu_cell_layer_is_highlighted(cell) ? bg_color() : fg_color());
   const char *txt = s_count > 0 ? s_titles[idx->row] : s_status;
-  graphics_draw_text(ctx, txt, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),
+  graphics_draw_text(ctx, txt, list_font(),
                      GRect(6, 2, b.size.w - 12, b.size.h - 4),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
 }
@@ -109,6 +151,8 @@ static void list_load(Window *window) {
     .select_click = menu_select,
     .select_long_click = menu_select_long,
   });
+  menu_layer_set_normal_colors(s_menu, bg_color(), fg_color());
+  menu_layer_set_highlight_colors(s_menu, fg_color(), bg_color());
   menu_layer_set_click_config_onto_window(s_menu, window);
   layer_add_child(root, menu_layer_get_layer(s_menu));
 }
@@ -121,6 +165,38 @@ static void list_unload(Window *window) {
 
 static void inbox_received(DictionaryIterator *it, void *ctx) {
   Tuple *t;
+
+  bool prefs_changed = false;
+  if ((t = dict_find(it, MESSAGE_KEY_LIST_FONT))) {
+    s_list_pref = t->type == TUPLE_CSTRING ? atoi(t->value->cstring) : (int) t->value->int32;
+    persist_write_int(PERSIST_LIST_FONT, s_list_pref);
+    prefs_changed = true;
+  }
+  if ((t = dict_find(it, MESSAGE_KEY_ARTICLE_FONT))) {
+    s_article_pref = t->type == TUPLE_CSTRING ? atoi(t->value->cstring) : (int) t->value->int32;
+    persist_write_int(PERSIST_ARTICLE_FONT, s_article_pref);
+    prefs_changed = true;
+  }
+  if ((t = dict_find(it, MESSAGE_KEY_THEME))) {
+    s_theme = t->type == TUPLE_CSTRING ? atoi(t->value->cstring) : (int) t->value->int32;
+    persist_write_int(PERSIST_THEME, s_theme);
+    window_set_background_color(s_list_window, bg_color());
+    menu_layer_set_normal_colors(s_menu, bg_color(), fg_color());
+    menu_layer_set_highlight_colors(s_menu, fg_color(), bg_color());
+    if (s_reader_open) {
+      window_set_background_color(s_reader_window, bg_color());
+      text_layer_set_background_color(s_text, bg_color());
+      text_layer_set_text_color(s_text, fg_color());
+    }
+    prefs_changed = true;
+  }
+  if (prefs_changed) {
+    menu_layer_reload_data(s_menu);
+    if (s_reader_open) {
+      text_layer_set_font(s_text, article_font());
+      reader_relayout();
+    }
+  }
 
   if ((t = dict_find(it, MESSAGE_KEY_ERROR))) {
     if (s_reader_open) {
@@ -170,11 +246,15 @@ static void inbox_dropped(AppMessageResult reason, void *ctx) {
 /* ---------- Ciclo de vida ---------- */
 
 static void init(void) {
+  s_list_pref = persist_read_int(PERSIST_LIST_FONT);
+  s_article_pref = persist_read_int(PERSIST_ARTICLE_FONT);
+  s_theme = persist_read_int(PERSIST_THEME);
   app_message_register_inbox_received(inbox_received);
   app_message_register_inbox_dropped(inbox_dropped);
   app_message_open(1200, 64);
 
   s_list_window = window_create();
+  window_set_background_color(s_list_window, bg_color());
   window_set_window_handlers(s_list_window, (WindowHandlers) {
     .load = list_load, .unload = list_unload,
   });

@@ -111,6 +111,7 @@ function sendArticle(index) {
 }
 
 Pebble.addEventListener('ready', sendList);
+Pebble.addEventListener('webviewclosed', function () { setTimeout(sendList, 1500); });
 Pebble.addEventListener('appmessage', function (e) {
   var p = e.payload;
   if (p.REQ_LIST !== undefined) { sendList(); }
