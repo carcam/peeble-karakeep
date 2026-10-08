@@ -98,7 +98,8 @@ function sendArticle(index) {
     var c = b.content || {};
     var text = c.htmlContent ? htmlToText(c.htmlContent) : (c.text || c.description || '');
     if (!text) { text = 'Este marcador no tiene contenido guardado.\n\n' + (c.url || ''); }
-    text = (it.title + '\n\n' + text).substring(0, MAX_ARTICLE_CHARS);
+    if (text.indexOf(it.title) !== 0) { text = it.title + '\n\n' + text; }
+    text = text.substring(0, MAX_ARTICLE_CHARS);
     var total = Math.ceil(text.length / CHUNK_CHARS);
     var msgs = [];
     for (var n = 0; n < total; n++) {

@@ -29,6 +29,7 @@ static void send_request(uint32_t key, int32_t value) {
 static void reader_relayout(void) {
   Layer *root = scroll_layer_get_layer(s_scroll);
   GRect bounds = layer_get_bounds(root);
+  layer_set_frame(text_layer_get_layer(s_text), GRect(0, 0, bounds.size.w, 4000));
   text_layer_set_text(s_text, s_article);
   GSize size = text_layer_get_content_size(s_text);
   size.h += 20;
@@ -80,7 +81,7 @@ static int16_t menu_cell_height(MenuLayer *m, MenuIndex *idx, void *ctx) {
 
 static void menu_draw_row(GContext *ctx, const Layer *cell, MenuIndex *idx, void *data) {
   GRect b = layer_get_bounds(cell);
-  graphics_context_set_text_color(ctx, GColorBlack);
+  graphics_context_set_text_color(ctx, menu_cell_layer_is_highlighted(cell) ? GColorWhite : GColorBlack);
   const char *txt = s_count > 0 ? s_titles[idx->row] : s_status;
   graphics_draw_text(ctx, txt, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),
                      GRect(6, 2, b.size.w - 12, b.size.h - 4),
