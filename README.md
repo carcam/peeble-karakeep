@@ -12,6 +12,8 @@ This is an unofficial community app and is not affiliated with Karakeep.
 - Text size follows the watch setting by default, or choose one for the list and one for the article.
 - Light and dark themes.
 
+The `.pbw` for each version is attached to the [releases](https://github.com/carcam/peeble-karakeep/releases).
+
 ## Usage
 1. `pebble build && pebble install --emulator emery` (or `--phone <ip>`).
 2. In the phone app, open the app settings and enter your Karakeep URL and API key (Settings > API Keys in Karakeep).
