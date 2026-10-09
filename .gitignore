@@ -2,3 +2,4 @@ build/
 .lock-waf*
 node_modules/
 *.pbw
+!docs/download/*.pbw
