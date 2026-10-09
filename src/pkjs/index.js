@@ -1,9 +1,9 @@
 var Clay = require('@rebble/clay');
 var clay = new Clay(require('./config.json'), null, { autoHandleEvents: true });
 
-var CHUNK_CHARS = 300;     // caracteres por mensaje (<= 900 bytes en UTF-8)
+var CHUNK_CHARS = 300;     // characters per message (<= 900 bytes in UTF-8)
 var MAX_ARTICLE_CHARS = 14000;
-var items = [];            // [{id, title}] de la última lista enviada
+var items = [];            // [{id, title}] from the last list sent
 
 function settings() {
   var s = {};
@@ -19,21 +19,21 @@ function settings() {
 
 function api(path, cb) {
   var cfg = settings();
-  if (!cfg.url || !cfg.key) { return cb(new Error('Configura la URL y la API key en el móvil')); }
+  if (!cfg.url || !cfg.key) { return cb(new Error('Set the URL and API key in the phone settings')); }
   var req = new XMLHttpRequest();
   req.open('GET', cfg.url + '/api/v1' + path, true);
   req.setRequestHeader('Authorization', 'Bearer ' + cfg.key);
   req.timeout = 20000;
   req.onload = function () {
-    if (req.status === 401) { return cb(new Error('API key no válida')); }
-    if (req.status !== 200) { return cb(new Error('Error del servidor ' + req.status)); }
-    try { cb(null, JSON.parse(req.responseText)); } catch (e) { cb(new Error('Respuesta no válida')); }
+    if (req.status === 401) { return cb(new Error('Invalid API key')); }
+    if (req.status !== 200) { return cb(new Error('Server error ' + req.status)); }
+    try { cb(null, JSON.parse(req.responseText)); } catch (e) { cb(new Error('Invalid response')); }
   };
-  req.onerror = req.ontimeout = function () { cb(new Error('No se pudo conectar')); };
+  req.onerror = req.ontimeout = function () { cb(new Error('Could not connect')); };
   req.send();
 }
 
-// Envía los mensajes de uno en uno esperando el ACK del reloj, con reintentos.
+// Sends messages one at a time, waiting for the watch ACK, with retries.
 function sendQueue(msgs, i, tries) {
   if (i >= msgs.length) { return; }
   Pebble.sendAppMessage(msgs[i], function () {
@@ -49,7 +49,7 @@ function sendError(err) {
 
 function bookmarkTitle(b) {
   var c = b.content || {};
-  return (b.title || c.title || c.url || (c.text || '').split('\n')[0] || 'Sin título')
+  return (b.title || c.title || c.url || (c.text || '').split('\n')[0] || 'Untitled')
     .replace(/\s+/g, ' ').trim().substring(0, 78);
 }
 
@@ -92,7 +92,7 @@ function htmlToText(html) {
 
 function sendArticle(index) {
   var it = items[index];
-  if (!it) { return sendError('Lista caducada, vuelve a abrirla'); }
+  if (!it) { return sendError('List expired, reopen the app'); }
   api('/bookmarks/' + encodeURIComponent(it.id) + '?includeContent=true', function (err, b) {
     if (err) { return sendError(err); }
     var c = b.content || {};

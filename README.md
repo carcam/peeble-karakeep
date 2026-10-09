@@ -1,17 +1,22 @@
 # Karakeep Reader for Pebble
 
-Lee en tu Pebble los artículos guardados en tu instancia de [Karakeep](https://karakeep.app).
+Read the articles saved in your own [Karakeep](https://karakeep.app) instance on your Pebble.
 
-- Lista de marcadores (sin archivar / favoritos / todos), configurable con Clay.
-- Lector con scroll; el texto se extrae del contenido ya rastreado por Karakeep.
-- Pulsación larga en Select (lista) = refrescar.
+This is an unofficial community app and is not affiliated with Karakeep.
 
-## Uso
-1. `pebble build && pebble install --emulator emery` (o `--phone <ip>`).
-2. En la app del móvil, abre los ajustes: URL de tu Karakeep y API key (Ajustes > API Keys).
+- Bookmark list (not archived / favourites / all), configurable with Clay.
+- Scrolling reader; the text comes from the content Karakeep has already crawled.
+- Long-press Select in the list to refresh.
+- Text size follows the watch setting by default, or choose one for the list and one for the article.
+- Light and dark themes.
 
-## Arquitectura
-`src/pkjs/index.js` habla con `/api/v1` de Karakeep (Bearer) y envía al reloj la lista y el
-texto del artículo en trozos de 300 caracteres con ACK; `src/c/main.c` pinta lista y lector.
+## Usage
+1. `pebble build && pebble install --emulator emery` (or `--phone <ip>`).
+2. In the phone app, open the app settings and enter your Karakeep URL and API key (Settings > API Keys in Karakeep).
 
-Plataformas: emery, gabbro, flint, diorite. Licencia MIT.
+## Architecture
+`src/pkjs/index.js` talks to Karakeep's `/api/v1` (Bearer auth) and sends the list and the
+article text to the watch in 300-character chunks, waiting for an ACK after each one;
+`src/c/main.c` draws the list and the reader.
+
+Platforms: emery, gabbro, flint, diorite.

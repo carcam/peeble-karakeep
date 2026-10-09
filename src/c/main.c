@@ -11,7 +11,7 @@ static Window *s_list_window;
 static MenuLayer *s_menu;
 static char s_titles[MAX_ITEMS][TITLE_LEN];
 static int s_count = 0;
-static char s_status[96] = "Cargando...";
+static char s_status[96] = "Loading...";
 
 static Window *s_reader_window;
 static ScrollLayer *s_scroll;
@@ -22,14 +22,14 @@ static bool s_reader_open = false;
 #define PERSIST_LIST_FONT 1
 #define PERSIST_ARTICLE_FONT 2
 #define PERSIST_THEME 3
-static int s_theme = 0;         /* 0 = claro, 1 = oscuro */
+static int s_theme = 0;         /* 0 = light, 1 = dark */
 
 static GColor bg_color(void) { return s_theme ? GColorBlack : GColorWhite; }
 static GColor fg_color(void) { return s_theme ? GColorWhite : GColorBlack; }
-static int s_list_pref = 0;     /* 0 = automático, 1..4 = tamaño elegido */
+static int s_list_pref = 0;     /* 0 = automatic, 1..4 = chosen size */
 static int s_article_pref = 0;
 
-/* Nivel efectivo 1..4; en automático sigue el tamaño de texto del reloj. */
+/* Effective level 1..4; in automatic mode follows the watch text size. */
 static int font_level(int pref) {
   if (pref >= 1 && pref <= 4) { return pref; }
   switch (preferred_content_size()) {
@@ -60,7 +60,7 @@ static void send_request(uint32_t key, int32_t value) {
   }
 }
 
-/* ---------- Lector ---------- */
+/* ---------- Reader ---------- */
 
 static void reader_relayout(void) {
   Layer *root = scroll_layer_get_layer(s_scroll);
@@ -89,7 +89,7 @@ static void reader_load(Window *window) {
   text_layer_enable_screen_text_flow_and_paging(s_text, 6);
   scroll_layer_set_paging(s_scroll, true);
 #endif
-  strcpy(s_article, "Cargando...");
+  strcpy(s_article, "Loading...");
   reader_relayout();
   s_reader_open = true;
 }
@@ -111,7 +111,7 @@ static void open_reader(int index) {
   send_request(MESSAGE_KEY_REQ_ARTICLE, index);
 }
 
-/* ---------- Lista ---------- */
+/* ---------- List ---------- */
 
 static uint16_t menu_rows(MenuLayer *m, uint16_t section, void *ctx) {
   return s_count > 0 ? s_count : 1;
@@ -143,7 +143,7 @@ static void menu_select(MenuLayer *m, MenuIndex *idx, void *ctx) {
 
 static void menu_select_long(MenuLayer *m, MenuIndex *idx, void *ctx) {
   s_count = 0;
-  strcpy(s_status, "Actualizando...");
+  strcpy(s_status, "Refreshing...");
   menu_layer_reload_data(s_menu);
   send_request(MESSAGE_KEY_REQ_LIST, 1);
 }
@@ -220,7 +220,7 @@ static void inbox_received(DictionaryIterator *it, void *ctx) {
 
   if ((t = dict_find(it, MESSAGE_KEY_ITEM_COUNT)) && t->value->int32 == 0) {
     s_count = 0;
-    strcpy(s_status, "No hay artículos");
+    strcpy(s_status, "No articles");
     menu_layer_reload_data(s_menu);
     return;
   }
@@ -251,7 +251,7 @@ static void inbox_dropped(AppMessageResult reason, void *ctx) {
   APP_LOG(APP_LOG_LEVEL_WARNING, "inbox dropped: %d", (int) reason);
 }
 
-/* ---------- Ciclo de vida ---------- */
+/* ---------- Lifecycle ---------- */
 
 static void init(void) {
   s_list_pref = persist_read_int(PERSIST_LIST_FONT);

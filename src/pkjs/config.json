@@ -8,13 +8,13 @@
     "items": [
       {
         "type": "heading",
-        "defaultValue": "Conexión"
+        "defaultValue": "Connection"
       },
       {
         "type": "input",
         "messageKey": "SERVER_URL",
-        "label": "URL de tu Karakeep",
-        "description": "Por ejemplo https://karakeep.example.com (sin /api).",
+        "label": "Your Karakeep URL",
+        "description": "For example https://karakeep.example.com (without /api).",
         "attributes": {
           "placeholder": "https://karakeep.example.com",
           "type": "url"
@@ -24,7 +24,7 @@
         "type": "input",
         "messageKey": "API_KEY",
         "label": "API key",
-        "description": "Créala en Karakeep: Ajustes > API Keys.",
+        "description": "Create one in Karakeep under Settings > API Keys.",
         "attributes": {
           "type": "password"
         }
@@ -36,24 +36,24 @@
     "items": [
       {
         "type": "heading",
-        "defaultValue": "Lista"
+        "defaultValue": "List"
       },
       {
         "type": "select",
         "messageKey": "LIST_FILTER",
-        "label": "Qué mostrar",
+        "label": "What to show",
         "defaultValue": "unarchived",
         "options": [
           {
-            "label": "Sin archivar",
+            "label": "Not archived",
             "value": "unarchived"
           },
           {
-            "label": "Favoritos",
+            "label": "Favourites",
             "value": "favourites"
           },
           {
-            "label": "Todos",
+            "label": "All",
             "value": "all"
           }
         ]
@@ -61,7 +61,7 @@
       {
         "type": "slider",
         "messageKey": "MAX_ITEMS",
-        "label": "Número de artículos",
+        "label": "Number of articles",
         "defaultValue": 20,
         "min": 5,
         "max": 30,
@@ -74,32 +74,32 @@
     "items": [
       {
         "type": "heading",
-        "defaultValue": "Letra"
+        "defaultValue": "Font"
       },
       {
         "type": "select",
         "messageKey": "LIST_FONT",
-        "label": "Tamaño en la lista",
+        "label": "Size in the list",
         "defaultValue": 0,
         "options": [
           {
-            "label": "Automático (como el reloj)",
+            "label": "Automatic (same as the watch)",
             "value": 0
           },
           {
-            "label": "Pequeño",
+            "label": "Small",
             "value": 1
           },
           {
-            "label": "Medio",
+            "label": "Medium",
             "value": 2
           },
           {
-            "label": "Grande",
+            "label": "Large",
             "value": 3
           },
           {
-            "label": "Muy grande",
+            "label": "Extra large",
             "value": 4
           }
         ]
@@ -107,31 +107,31 @@
       {
         "type": "select",
         "messageKey": "ARTICLE_FONT",
-        "label": "Tamaño en el artículo",
+        "label": "Size in the article",
         "defaultValue": 0,
         "options": [
           {
-            "label": "Automático (como el reloj)",
+            "label": "Automatic (same as the watch)",
             "value": 0
           },
           {
-            "label": "Pequeño",
+            "label": "Small",
             "value": 1
           },
           {
-            "label": "Medio",
+            "label": "Medium",
             "value": 2
           },
           {
-            "label": "Grande",
+            "label": "Large",
             "value": 3
           },
           {
-            "label": "Muy grande",
+            "label": "Extra large",
             "value": 4
           }
         ],
-        "description": "Automático usa el tamaño de texto configurado en los ajustes del reloj."
+        "description": "Automatic uses the text size set in your watch settings."
       }
     ]
   },
@@ -140,20 +140,20 @@
     "items": [
       {
         "type": "heading",
-        "defaultValue": "Aspecto"
+        "defaultValue": "Appearance"
       },
       {
         "type": "select",
         "messageKey": "THEME",
-        "label": "Tema",
+        "label": "Theme",
         "defaultValue": 0,
         "options": [
           {
-            "label": "Claro",
+            "label": "Light",
             "value": 0
           },
           {
-            "label": "Oscuro",
+            "label": "Dark",
             "value": 1
           }
         ]
@@ -162,6 +162,6 @@
   },
   {
     "type": "submit",
-    "defaultValue": "Guardar"
+    "defaultValue": "Save"
   }
 ]
