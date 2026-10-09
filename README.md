@@ -20,3 +20,7 @@ article text to the watch in 300-character chunks, waiting for an ACK after each
 `src/c/main.c` draws the list and the reader.
 
 Platforms: emery, gabbro, flint, diorite.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
