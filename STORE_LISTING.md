@@ -4,6 +4,7 @@ Text used for the Pebble app store listing.
 
 - **Title:** Karakeep Reader
 - **Category:** Tools & Utilities
+- **Store page:** https://apps.repebble.com/a76ab108742840bfa7cc869a
 
 ## Short description
 

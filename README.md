@@ -4,6 +4,8 @@ Read the articles saved in your own [Karakeep](https://karakeep.app) instance on
 
 This is an unofficial community app and is not affiliated with Karakeep.
 
+**Install it from the [Pebble app store](https://apps.repebble.com/a76ab108742840bfa7cc869a).**
+
 - Bookmark list (not archived / favourites / all), configurable with Clay.
 - Scrolling reader; the text comes from the content Karakeep has already crawled.
 - Long-press Select in the list to refresh.
