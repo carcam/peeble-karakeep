@@ -3,6 +3,9 @@
 #define MAX_ITEMS 30
 #define TITLE_LEN 84
 #define ARTICLE_MAX 16384
+#define READER_X PBL_IF_ROUND_ELSE(30, 4)
+#define READER_Y PBL_IF_ROUND_ELSE(34, 0)
+#define READER_PAD_BOTTOM PBL_IF_ROUND_ELSE(60, 20)
 
 static Window *s_list_window;
 static MenuLayer *s_menu;
@@ -62,12 +65,12 @@ static void send_request(uint32_t key, int32_t value) {
 static void reader_relayout(void) {
   Layer *root = scroll_layer_get_layer(s_scroll);
   GRect bounds = layer_get_bounds(root);
-  layer_set_frame(text_layer_get_layer(s_text), GRect(0, 0, bounds.size.w, 4000));
+  int16_t text_w = bounds.size.w - 2 * READER_X;
+  layer_set_frame(text_layer_get_layer(s_text), GRect(READER_X, READER_Y, text_w, 4000));
   text_layer_set_text(s_text, s_article);
   GSize size = text_layer_get_content_size(s_text);
-  size.h += 20;
-  layer_set_frame(text_layer_get_layer(s_text), GRect(0, 0, bounds.size.w, size.h));
-  scroll_layer_set_content_size(s_scroll, GSize(bounds.size.w, size.h));
+  layer_set_frame(text_layer_get_layer(s_text), GRect(READER_X, READER_Y, text_w, size.h));
+  scroll_layer_set_content_size(s_scroll, GSize(bounds.size.w, READER_Y + size.h + READER_PAD_BOTTOM));
 }
 
 static void reader_load(Window *window) {
@@ -76,13 +79,16 @@ static void reader_load(Window *window) {
   window_set_background_color(window, bg_color());
   s_scroll = scroll_layer_create(bounds);
   scroll_layer_set_click_config_onto_window(s_scroll, window);
-  s_text = text_layer_create(GRect(PBL_IF_ROUND_ELSE(12, 4), 0,
-                                   bounds.size.w - PBL_IF_ROUND_ELSE(24, 8), 2000));
+  s_text = text_layer_create(GRect(READER_X, READER_Y, bounds.size.w - 2 * READER_X, 2000));
   text_layer_set_font(s_text, article_font());
   text_layer_set_background_color(s_text, bg_color());
   text_layer_set_text_color(s_text, fg_color());
   scroll_layer_add_child(s_scroll, text_layer_get_layer(s_text));
   layer_add_child(root, scroll_layer_get_layer(s_scroll));
+#if defined(PBL_ROUND)
+  text_layer_enable_screen_text_flow_and_paging(s_text, 6);
+  scroll_layer_set_paging(s_scroll, true);
+#endif
   strcpy(s_article, "Cargando...");
   reader_relayout();
   s_reader_open = true;
@@ -126,8 +132,9 @@ static void menu_draw_row(GContext *ctx, const Layer *cell, MenuIndex *idx, void
   graphics_context_set_text_color(ctx, menu_cell_layer_is_highlighted(cell) ? bg_color() : fg_color());
   const char *txt = s_count > 0 ? s_titles[idx->row] : s_status;
   graphics_draw_text(ctx, txt, list_font(),
-                     GRect(6, 2, b.size.w - 12, b.size.h - 4),
-                     GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+                     GRect(PBL_IF_ROUND_ELSE(26, 6), 2, b.size.w - PBL_IF_ROUND_ELSE(52, 12), b.size.h - 4),
+                     GTextOverflowModeTrailingEllipsis,
+                     PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft), NULL);
 }
 
 static void menu_select(MenuLayer *m, MenuIndex *idx, void *ctx) {
@@ -153,6 +160,7 @@ static void list_load(Window *window) {
   });
   menu_layer_set_normal_colors(s_menu, bg_color(), fg_color());
   menu_layer_set_highlight_colors(s_menu, fg_color(), bg_color());
+  menu_layer_set_center_focused(s_menu, PBL_IF_ROUND_ELSE(true, false));
   menu_layer_set_click_config_onto_window(s_menu, window);
   layer_add_child(root, menu_layer_get_layer(s_menu));
 }
