@@ -24,3 +24,5 @@ Platforms: emery, gabbro, flint, diorite.
 ## License
 
 MIT, see [LICENSE](LICENSE).
+
+Project page: https://carcam.github.io/peeble-karakeep/

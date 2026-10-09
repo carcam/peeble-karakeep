@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karakeep Reader for Pebble</title>
+<meta name="description" content="Read the articles saved in your own Karakeep instance on your Pebble smartwatch.">
+<link rel="icon" href="assets/icon.png">
+<style>
+:root {
+  --bg: #f6f8fa; --surface: #ffffff; --text: #1b2733; --muted: #5a6b7b;
+  --accent: #e8501f; --navy: #1b3a57; --border: #d8e0e8;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f1b27; --surface: #172636; --text: #e8eef4; --muted: #9db0c2;
+          --accent: #ff7a4d; --border: #27394b; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.wrap { max-width: 820px; margin: 0 auto; padding: 0 16px; }
+header { background: var(--navy); color: #fff; padding: 56px 0 48px; }
+header .wrap { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+header img { width: 96px; height: 96px; border-radius: 22px; }
+h1 { margin: 0 0 6px; font-size: 2.2rem; line-height: 1.15; }
+header p { margin: 0; color: #c8d7e6; font-size: 1.1rem; }
+.btns { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { display: inline-block; padding: 10px 18px; border-radius: 8px; font-weight: 600;
+  text-decoration: none; background: var(--accent); color: #fff; }
+.btn.alt { background: transparent; border: 1px solid #6f8aa5; color: #fff; }
+section { padding: 36px 0 8px; }
+h2 { margin: 0 0 14px; font-size: 1.4rem; }
+ul { padding-left: 1.2rem; } li { margin: 6px 0; }
+.shots { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+.shots figure { margin: 0; text-align: center; color: var(--muted); font-size: .85rem; }
+.shots img { display: block; width: 200px; max-width: 100%; height: auto; margin-bottom: 6px;
+  image-rendering: pixelated; border-radius: 10px; border: 1px solid var(--border); background: #fff; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+ol li { margin: 8px 0; }
+code { background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+  padding: 1px 6px; font-size: .92em; }
+a { color: var(--accent); }
+footer { margin-top: 40px; padding: 24px 0 40px; border-top: 1px solid var(--border);
+  color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <img src="assets/icon.png" alt="Karakeep Reader icon">
+    <div>
+      <h1>Karakeep Reader</h1>
+      <p>Your saved articles, on your wrist.</p>
+      <div class="btns">
+        <a class="btn" href="download/karakeep-reader.pbw">Download .pbw</a>
+        <a class="btn alt" href="https://github.com/carcam/peeble-karakeep">View on GitHub</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section>
+    <h2>What it is</h2>
+    <p>Karakeep Reader is a Pebble watchapp that lets you read the articles saved in your own
+    <a href="https://karakeep.app">Karakeep</a> (formerly Hoarder) server straight from your watch.
+    It works with self-hosted and hosted instances; you only need a Karakeep URL and an API key.</p>
+  </section>
+
+  <section>
+    <h2>Features</h2>
+    <ul>
+      <li>Browse your latest bookmarks: not archived, favourites or all</li>
+      <li>Read the full article text with smooth scrolling</li>
+      <li>Uses the content Karakeep has already crawled, so articles load fast</li>
+      <li>Works with text notes as well as saved links</li>
+      <li>Text size follows your watch setting, or choose one size for the list and another for articles</li>
+      <li>Light and dark themes</li>
+      <li>Long-press Select in the list to refresh</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <figure><img src="assets/list.png" alt="Bookmark list, light theme" width="200"><span>List</span></figure>
+      <figure><img src="assets/reader.png" alt="Article reader, light theme" width="200"><span>Reader</span></figure>
+      <figure><img src="assets/list-dark.png" alt="Bookmark list, dark theme" width="200"><span>Dark list</span></figure>
+      <figure><img src="assets/reader-dark.png" alt="Article reader, dark theme" width="200"><span>Dark reader</span></figure>
+      <figure><img src="assets/round-reader.png" alt="Reader on a round watch" width="200"><span>Round watch</span></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Setup</h2>
+    <div class="card">
+      <ol>
+        <li>Install the app: open the downloaded <code>.pbw</code> file with the Pebble app on your phone.</li>
+        <li>In Karakeep, go to <strong>Settings &gt; API Keys</strong> and create a new key.</li>
+        <li>Open Karakeep Reader's settings in the Pebble app on your phone.</li>
+        <li>Enter your server URL (for example <code>https://karakeep.example.com</code>) and the API key, then save.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>Good to know</h2>
+    <ul>
+      <li>Requires your own Karakeep instance and an internet connection on your phone.</li>
+      <li>Your URL and API key are stored only in the Pebble app on your phone and are used only to talk to your server.</li>
+      <li>Text only: images are not shown, and very long articles are cut after about 14,000 characters.</li>
+      <li>Built for Pebble Time 2 (emery), Pebble Round 2 (gabbro), Pebble 2 Duo (flint) and Pebble 2 (diorite).</li>
+    </ul>
+  </section>
+
+  <footer>
+    Open source under the <a href="https://github.com/carcam/peeble-karakeep/blob/main/LICENSE">MIT license</a>.
+    Karakeep Reader is an unofficial community app and is not affiliated with Karakeep or Pebble.
+  </footer>
+</main>
+</body>
+</html>
